@@ -3909,21 +3909,8 @@ dhd_preinit_ioctls(dhd_pub_t *dhd)
 			return BCME_NOTUP;
 		}
 		memcpy(dhd->mac.octet, ea_addr.octet, ETHER_ADDR_LEN);
-	} else {
-#endif /* GET_CUSTOM_MAC_ENABLE */
-		/* Get the default device MAC address directly from firmware */
-		memset(buf, 0, sizeof(buf));
-		bcm_mkiovar("cur_etheraddr", 0, 0, buf, sizeof(buf));
-		if ((ret = dhd_wl_ioctl_cmd(dhd, WLC_GET_VAR, buf, sizeof(buf),
-			FALSE, 0)) < 0) {
-			DHD_ERROR(("%s: can't get MAC address , error=%d\n", __FUNCTION__, ret));
-			return BCME_NOTUP;
-		}
-		/* Update public MAC address after reading from Firmware */
-		memcpy(dhd->mac.octet, buf, ETHER_ADDR_LEN);
-
-#ifdef GET_CUSTOM_MAC_ENABLE
 	}
+
 #endif /* GET_CUSTOM_MAC_ENABLE */
 
 	DHD_TRACE(("Firmware = %s\n", fw_path));
