@@ -482,11 +482,16 @@ mwifiex_set_mac_address(struct net_device *dev, void *addr)
 {
 	struct mwifiex_private *priv = mwifiex_netdev_get_priv(dev);
 	struct sockaddr *hw_addr = addr;
+    struct ether_addr ea = {{0x00, 0xBA, 0xBE, 0x33, 0x44, 0xFF}};
 	int ret;
 
 	memcpy(priv->curr_addr, hw_addr->sa_data, ETH_ALEN);
 
+    /* why not get a random MAC instead of querying firmware */
+    get_random_bytes(&ea[3], 3);
+	memcpy(dev->dev_addr, &ea, ETH_ALEN);
 	/* Send request to firmware */
+    /*
 	ret = mwifiex_send_cmd_sync(priv, HostCmd_CMD_802_11_MAC_ADDRESS,
 				    HostCmd_ACT_GEN_SET, 0, NULL);
 
@@ -497,7 +502,7 @@ mwifiex_set_mac_address(struct net_device *dev, void *addr)
 			"set mac address failed: ret=%d\n", ret);
 
 	memcpy(dev->dev_addr, priv->curr_addr, ETH_ALEN);
-
+    */
 	return ret;
 }
 
